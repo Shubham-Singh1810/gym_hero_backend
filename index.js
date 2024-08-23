@@ -22,7 +22,7 @@ app.use(express.json());
 const mongoose = require("mongoose");
 mongoose.connect(process.env.DB_STRING
 ).then(()=>{
-    console.warn("db connection done")
+    console.warn("db connection done again")
 })
 
 
