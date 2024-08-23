@@ -6,7 +6,7 @@ const { sendResponse } = require("../utils/common");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const cloudinary = require("../utils/cloudinary");
 const jwt = require("jsonwebtoken");
-const upload = require("../Utils/multer")
+const upload = require("../utils/multer")
 
 adminController.post("/createAdmin", upload.single("photo"), async (req, res) => {
   try {
