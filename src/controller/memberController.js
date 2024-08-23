@@ -79,7 +79,7 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
     }
 
     // Generate a unique URL or identifier for the QR code
-    const uniqueUrl = `http://localhost:7000/api/member/details/${req.body.mobile}`;
+    const uniqueUrl = `https://gym-hero-backend.vercel.app/api/member/details/${req.body.mobile}`;
 
     // Generate the QR code as a temporary file using Multer
     const qrCodeFileName = `${memberData.mobile}-qr.png`;
