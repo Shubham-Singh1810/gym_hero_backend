@@ -5,7 +5,7 @@ const Member = require("../model/memberSchema");
 const Attendance = require("../model/attendanceSchema");
 const { sendResponse } = require("../utils/common");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
-const upload = require("../Utils/multer")
+const upload = require("../utils/multer")
 const jwt = require("jsonwebtoken");
 const moment = require("moment-timezone");
 const cloudinary = require("../utils/cloudinary");
