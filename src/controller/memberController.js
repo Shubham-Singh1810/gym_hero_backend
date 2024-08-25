@@ -5,56 +5,13 @@ const Member = require("../model/memberSchema");
 const Attendance = require("../model/attendanceSchema");
 const { sendResponse } = require("../utils/common");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
-const upload = require("../utils/multer")
+const upload = require("../utils/multer");
 const jwt = require("jsonwebtoken");
 const moment = require("moment-timezone");
 const cloudinary = require("../utils/cloudinary");
-const QRCode = require('qrcode');
-const path = require('path'); // Add this line to require the path module
-const fs = require('fs');
-
-// memberController.post("/createMember", upload.single("photo"), async (req, res) => {
-//   try {
-//     const existingMember = await Member.findOne({
-//       $or: [{ mobile: req.body.mobile }],
-//     });
-
-//     if (existingMember) {
-//       return res.status(409).send({
-//         success: false,
-//         message: "mobile number already exists",
-//       });
-//     }
-
-//     let memberData;
-    
-//     if (req.file) {
-//       let photo = await cloudinary.uploader.upload(req.file.path, function (err, result) {
-//         if (err) {
-//           return err;
-//         } else {
-//           return result;
-//         }
-//       });
-//       memberData = { ...req.body, photo: photo.url };
-//     }
-
-//     const memberCreated = new Member(memberData);
-//     await memberCreated.save();
-//     sendResponse(res, 200, "Success", {
-//       success: true,
-//       message: "Member Registered successfully!",
-//       memberData: memberCreated,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       success: false,
-//       message: error.message || "Internal server error",
-//     });
-//   }
-// });
-
+const QRCode = require("qrcode");
+const path = require("path"); // Add this line to require the path module
+const fs = require("fs");
 
 memberController.post("/createMember", upload.single("photo"), async (req, res) => {
   try {
@@ -64,8 +21,8 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
     });
 
     if (existingMember) {
-      return res.status(409).send({
-        success: false,
+      return res.status(200).send({
+        success: true,
         message: "Mobile number already exists",
       });
     }
@@ -83,7 +40,7 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
 
     // Generate the QR code as a temporary file using Multer
     const qrCodeFileName = `${memberData.mobile}-qr.png`;
-    const qrCodePath = path.join('uploads', qrCodeFileName);
+    const qrCodePath = path.join("uploads", qrCodeFileName);
     await QRCode.toFile(qrCodePath, uniqueUrl);
 
     // Upload the QR code to Cloudinary
@@ -113,7 +70,6 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
 });
 
 // Assuming you're using Express and have defined a router for your member routes
-
 
 memberController.get("/details/:mobile", async (req, res) => {
   try {
@@ -191,11 +147,7 @@ memberController.get("/details/:mobile", async (req, res) => {
   }
 });
 
-
-
-
-
-memberController.get("/getMembers", async (req, res) => {
+memberController.post("/getMembers", async (req, res) => {
   try {
     const data = await memberServices.getMember({});
     sendResponse(res, 200, "Success", {
@@ -213,10 +165,7 @@ memberController.get("/getMembers", async (req, res) => {
 
 memberController.put("/updateMemberData", async (req, res) => {
   try {
-    const data = await memberServices.updateData(
-      { _id: req.body._id },
-      req.body
-    );
+    const data = await memberServices.updateData({ _id: req.body._id }, req.body);
     sendResponse(res, 200, "Success", {
       success: true,
       message: "Member Updated successfully!",
