@@ -6,7 +6,7 @@ const { sendResponse } = require("../utils/common");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const cloudinary = require("../utils/cloudinary");
 const jwt = require("jsonwebtoken");
-const upload = require("../utils/multer")
+const upload = require("../utils/multer");
 
 adminController.post("/createAdmin", upload.single("photo"), async (req, res) => {
   try {
@@ -51,6 +51,29 @@ adminController.post("/createAdmin", upload.single("photo"), async (req, res) =>
   }
 });
 
+adminController.post("/login", async (req, res) => {
+  try {
+    const data = await adminServices.login(req.body);
+    if (data) {
+      sendResponse(res, 200, "Success", {
+        success: true,
+        message: "Admin Logged Successfully",
+        data: data,
+      });
+    } else {
+      sendResponse(res, 200, "Success", {
+        success: true,
+        message: "Invalid Credentials",
+        data: data,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    sendResponse(res, 500, "Failed", {
+      message: error.message || "Internal server error",
+    });
+  }
+});
 
 adminController.get("/getAdmin", async (req, res) => {
   try {
@@ -68,22 +91,20 @@ adminController.get("/getAdmin", async (req, res) => {
   }
 });
 
-
 adminController.put("/updateAdminData", async (req, res) => {
-    try {
-      const data = await adminServices.updateData({ _id: req.body._id }, req.body);
-      sendResponse(res, 200, "Success", {
-        success: true,
-        message: "Admin Updated successfully!",
-        data: data
-      });
-    } catch (error) {
-      console.log(error);
-      sendResponse(res, 500, "Failed", {
-        message: error.message || "Internal server error",
-      });
-    }
+  try {
+    const data = await adminServices.updateData({ _id: req.body._id }, req.body);
+    sendResponse(res, 200, "Success", {
+      success: true,
+      message: "Admin Updated successfully!",
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    sendResponse(res, 500, "Failed", {
+      message: error.message || "Internal server error",
+    });
+  }
 });
-
 
 module.exports = adminController;

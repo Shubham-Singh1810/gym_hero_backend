@@ -9,6 +9,11 @@ exports.getAdmin = async () => {
   return admin;
 };
 
+exports.login = async (body) => {
+  const admin = await Admin.findOne(body);
+  return admin;
+};
+
 
 exports.updateData = async (filter, update) => {
   return await Admin.updateOne(filter, update, { new: true });
