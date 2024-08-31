@@ -12,6 +12,60 @@ const cloudinary = require("../utils/cloudinary");
 const QRCode = require("qrcode");
 const path = require("path"); // Add this line to require the path module
 const fs = require("fs");
+// memberController.post("/createMember", upload.single("photo"), async (req, res) => {
+//   try {
+//     // Check if a member with the provided mobile number already exists
+//     const existingMember = await Member.findOne({
+//       $or: [{ mobile: req.body.mobile }],
+//     });
+
+//     if (existingMember) {
+//       return res.status(200).send({
+//         success: true,
+//         message: "Mobile number already exists",
+//       });
+//     }
+
+//     let memberData = { ...req.body };
+
+//     // Handle photo upload if a file is provided
+//     if (req.file) {
+//       const photo = await cloudinary.uploader.upload(req.file.path);
+//       memberData.photo = photo.url;
+//     }
+
+//     // // Generate a unique URL or identifier for the QR code
+//     // const uniqueUrl = `https://gym-hero-backend.vercel.app/api/member/details/${req.body.mobile}`;
+
+//     // // Generate the QR code as a temporary file using Multer
+//     // const qrCodeFileName = `${memberData.mobile}-qr.png`;
+//     // const qrCodePath = path.join("uploads", qrCodeFileName);
+//     // await QRCode.toFile(qrCodePath, uniqueUrl);
+
+//     // // Upload the QR code to Cloudinary
+//     // const qrCode = await cloudinary.uploader.upload(qrCodePath);
+//     // memberData.qrCode = qrCode.url;
+
+//     // // Remove the temporary QR code file after upload
+//     // fs.unlinkSync(qrCodePath);
+
+//     // Create the new member record
+//     const memberCreated = new Member(memberData);
+//     await memberCreated.save();
+
+//     // Send the response back to the client
+//     sendResponse(res, 200, "Success", {
+//       success: true,
+//       message: "Member Registered successfully!",
+//       memberData: memberCreated,
+//     });
+//   } catch (error) {
+//     res.status(500).send({
+//       success: false,
+//       message: error.message || "Internal server error",
+//     });
+//   }
+// });
 
 memberController.post("/createMember", upload.single("photo"), async (req, res) => {
   try {
@@ -35,20 +89,39 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
       memberData.photo = photo.url;
     }
 
-    // // Generate a unique URL or identifier for the QR code
-    // const uniqueUrl = `https://gym-hero-backend.vercel.app/api/member/details/${req.body.mobile}`;
+    // Calculate the dueDate based on joiningDate and package
+    if (req.body.joiningDate && req.body.package) {
+      const { joiningDate, package } = req.body;
+      let durationInMonths;
 
-    // // Generate the QR code as a temporary file using Multer
-    // const qrCodeFileName = `${memberData.mobile}-qr.png`;
-    // const qrCodePath = path.join("uploads", qrCodeFileName);
-    // await QRCode.toFile(qrCodePath, uniqueUrl);
+      switch (package) {
+        case '1Month':
+          durationInMonths = 1;
+          break;
+        case '3Month':
+          durationInMonths = 3;
+          break;
+        case '6Month':
+          durationInMonths = 6;
+          break;
+        case '12Month':
+          durationInMonths = 12;
+          break;
+        default:
+          return res.status(400).send({
+            success: false,
+            message: "Invalid package selected",
+          });
+      }
 
-    // // Upload the QR code to Cloudinary
-    // const qrCode = await cloudinary.uploader.upload(qrCodePath);
-    // memberData.qrCode = qrCode.url;
-
-    // // Remove the temporary QR code file after upload
-    // fs.unlinkSync(qrCodePath);
+      // Calculate the due date
+      memberData.dueDate = moment(joiningDate).add(durationInMonths, 'months').format('YYYY-MM-DD');
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Joining date and package are required",
+      });
+    }
 
     // Create the new member record
     const memberCreated = new Member(memberData);

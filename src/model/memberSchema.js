@@ -18,6 +18,7 @@ const memberSchema = mongoose.Schema({
         enum: ['1Month', '3Month', '6Month', '12Month']
     },
     joiningDate: { type: String },
+    dueDate: { type: String },
     // qrCode: { type: String },
 });
 
