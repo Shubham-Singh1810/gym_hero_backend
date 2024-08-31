@@ -61,7 +61,6 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
       memberData: memberCreated,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       success: false,
       message: error.message || "Internal server error",
