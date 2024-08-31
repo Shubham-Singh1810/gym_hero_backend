@@ -35,20 +35,20 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
       memberData.photo = photo.url;
     }
 
-    // Generate a unique URL or identifier for the QR code
-    const uniqueUrl = `https://gym-hero-backend.vercel.app/api/member/details/${req.body.mobile}`;
+    // // Generate a unique URL or identifier for the QR code
+    // const uniqueUrl = `https://gym-hero-backend.vercel.app/api/member/details/${req.body.mobile}`;
 
-    // Generate the QR code as a temporary file using Multer
-    const qrCodeFileName = `${memberData.mobile}-qr.png`;
-    const qrCodePath = path.join("uploads", qrCodeFileName);
-    await QRCode.toFile(qrCodePath, uniqueUrl);
+    // // Generate the QR code as a temporary file using Multer
+    // const qrCodeFileName = `${memberData.mobile}-qr.png`;
+    // const qrCodePath = path.join("uploads", qrCodeFileName);
+    // await QRCode.toFile(qrCodePath, uniqueUrl);
 
-    // Upload the QR code to Cloudinary
-    const qrCode = await cloudinary.uploader.upload(qrCodePath);
-    memberData.qrCode = qrCode.url;
+    // // Upload the QR code to Cloudinary
+    // const qrCode = await cloudinary.uploader.upload(qrCodePath);
+    // memberData.qrCode = qrCode.url;
 
-    // Remove the temporary QR code file after upload
-    fs.unlinkSync(qrCodePath);
+    // // Remove the temporary QR code file after upload
+    // fs.unlinkSync(qrCodePath);
 
     // Create the new member record
     const memberCreated = new Member(memberData);
@@ -70,81 +70,81 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
 
 // Assuming you're using Express and have defined a router for your member routes
 
-memberController.get("/details/:mobile", async (req, res) => {
-  try {
-    const { mobile } = req.params;
-    const member = await Member.findOne({ mobile });
+// memberController.get("/details/:mobile", async (req, res) => {
+//   try {
+//     const { mobile } = req.params;
+//     const member = await Member.findOne({ mobile });
 
-    if (!member) {
-      return res.status(404).send("Member not found");
-    }
+//     if (!member) {
+//       return res.status(404).send("Member not found");
+//     }
 
-    // Assuming you want to render the member details as HTML
-    const htmlContent = `
-      <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Member Details</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-    }
-    .member-details {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .member-details img {
-      max-width: 150px;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto;
-    }
-    .member-details h2 {
-      margin-top: 0;
-      text-align: center;
-      color: #333;
-    }
-    .member-details p {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    .member-details p strong {
-      color: #555;
-    }
-  </style>
-</head>
-<body>
-  <div class="member-details">
-    <img src="${member.photo}" alt="Member Photo">
-    <h2>${member.fullName}</h2>
-    <p><strong>Mobile:</strong> ${member.mobile}</p>
-    <p><strong>Address:</strong> ${member.address}</p>
-    <p><strong>Profession:</strong> ${member.profession}</p>
-    <p><strong>Body Weight:</strong> ${member.bodyWeight}</p>
-    <p><strong>Fitness Goal:</strong> ${member.fitnessGoal.join(", ")}</p>
-    <p><strong>Package:</strong> ${member.package.join(", ")}</p>
-    <p><strong>Due Date:</strong> ${member.dueDate}</p>
-  </div>
-</body>
-</html>
+//     // Assuming you want to render the member details as HTML
+//     const htmlContent = `
+//       <!DOCTYPE html>
+// <html lang="en">
+// <head>
+//   <meta charset="UTF-8">
+//   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//   <title>Member Details</title>
+//   <style>
+//     body {
+//       font-family: Arial, sans-serif;
+//       margin: 20px;
+//       background-color: #f4f4f4;
+//     }
+//     .member-details {
+//       max-width: 600px;
+//       margin: auto;
+//       padding: 20px;
+//       background: #fff;
+//       border: 1px solid #ddd;
+//       border-radius: 8px;
+//       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+//     }
+//     .member-details img {
+//       max-width: 150px;
+//       border-radius: 50%;
+//       display: block;
+//       margin: 0 auto;
+//     }
+//     .member-details h2 {
+//       margin-top: 0;
+//       text-align: center;
+//       color: #333;
+//     }
+//     .member-details p {
+//       margin: 10px 0;
+//       font-size: 16px;
+//     }
+//     .member-details p strong {
+//       color: #555;
+//     }
+//   </style>
+// </head>
+// <body>
+//   <div class="member-details">
+//     <img src="${member.photo}" alt="Member Photo">
+//     <h2>${member.fullName}</h2>
+//     <p><strong>Mobile:</strong> ${member.mobile}</p>
+//     <p><strong>Address:</strong> ${member.address}</p>
+//     <p><strong>Profession:</strong> ${member.profession}</p>
+//     <p><strong>Body Weight:</strong> ${member.bodyWeight}</p>
+//     <p><strong>Fitness Goal:</strong> ${member.fitnessGoal.join(", ")}</p>
+//     <p><strong>Package:</strong> ${member.package.join(", ")}</p>
+//     <p><strong>Due Date:</strong> ${member.dueDate}</p>
+//   </div>
+// </body>
+// </html>
 
-    `;
+//     `;
 
-    res.send(htmlContent);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal server error");
-  }
-});
+//     res.send(htmlContent);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send("Internal server error");
+//   }
+// });
 
 memberController.post("/getMembers", async (req, res) => {
   try {

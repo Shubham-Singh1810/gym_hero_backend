@@ -17,8 +17,8 @@ const memberSchema = mongoose.Schema({
         type: [String],
         enum: ['1Month', '3Month', '6Month', '12Month']
     },
-    dueDate: { type: String },
-    qrCode: { type: String },
+    joiningDate: { type: String },
+    // qrCode: { type: String },
 });
 
 memberSchema.plugin(timestamps);
