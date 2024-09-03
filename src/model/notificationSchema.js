@@ -3,8 +3,8 @@ const timestamps = require("mongoose-timestamp");
 
 const notificationSchema = mongoose.Schema({
   message: { type: String },
-  type: { type: [String], enum: ["member", "enquiry"]},
-  isRead: { type: Boolean },
+  type: { type: [String], enum: ["newMember", "paymentRemainder", "pendingPayment", "enquiryFollowUp"]},
+  isRead: { type: Boolean ,  default: false},
   releventId: { type: String },
 });
 
