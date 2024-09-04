@@ -131,14 +131,29 @@ adminController.get("/statics", async (req, res) => {
     const memberCount = await Member.countDocuments();
     const members = await Member.find({});
     const notifications = await Notification.find({ isRead: false }).sort({ createdAt: -1 });
-   
+    const currentDateStr = moment().format("DD-MM-YYYY");
+    function compareDates(date1, date2) {
+      // Parse the dates using moment
+      const d1 = moment(date1, "DD-MM-YYYY");
+      const d2 = moment(date2, "DD-MM-YYYY");
     
-    const pendingPaymentMember = members?.filter(async (v, i) => {
+      // Compare the two dates
+      if (d1.isAfter(d2)) {
+        return true;
+      } else if (d1.isBefore(d2)) {
+        return false;
+      } else {
+        return false;
+      }
+    }
+    
+    const pendingPaymentMember = members?.filter((v, i) => {
       const dueDate = moment(v?.dueDate).format("DD-MM-YYYY");
       if (compareDates(currentDateStr, dueDate)) {
         return v;
       }
     });
+    
     sendResponse(res, 200, "Success", {
       success: true,
       message: "Admin dashboard statistics fetched successfully!",
