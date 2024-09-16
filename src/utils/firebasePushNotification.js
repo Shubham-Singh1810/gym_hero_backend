@@ -1,8 +1,8 @@
 const { GoogleAuth } = require('google-auth-library');
 const axios = require('axios');
-
+require("dotenv").config();
 // Load the service account key file
-const serviceAccount = require("../firebaseServiceAccount.json");
+const serviceAccount = process.env;
 
 // Initialize Google Auth Library
 const auth = new GoogleAuth({
