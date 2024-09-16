@@ -235,15 +235,15 @@ adminController.post("/create-notifications", async (req, res) => {
   }
 });
 
-// adminController.post("/send-notification", async (req, res) => {
-//   const { fcmToken, title, body } = req.body;
+adminController.post("/send-notification", async (req, res) => {
+  const { fcmToken, title, body } = req.body;
 
-//   try {
-//     const result = await pushNotification(fcmToken, title, body);
-//     res.status(200).json(result);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
+  try {
+    const result = await pushNotification(fcmToken, title, body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = adminController;
