@@ -7,6 +7,7 @@ const adminSchema = mongoose.Schema({
     fullName: { type: String },
     phoneNo: { type: String },
     password: { type: String },
+    fcmToken:{type:String}
 });
 
 adminSchema.plugin(timestamps);
