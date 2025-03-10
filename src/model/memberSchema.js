@@ -19,7 +19,6 @@ const memberSchema = mongoose.Schema({
     },
     joiningDate: { type: String },
     dueDate: { type: String },
-    // qrCode: { type: String },
 });
 
 memberSchema.plugin(timestamps);

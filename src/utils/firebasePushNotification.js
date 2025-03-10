@@ -1,14 +1,9 @@
-const { GoogleAuth } = require('google-auth-library');
-const axios = require('axios');
-require("dotenv").config();
-// Load the service account key file
-const serviceAccount = process.env;
+const admin = require("firebase-admin");
+const serviceAccount = require("../gymhero-b7346-firebase-adminsdk-p2e62-f26f332800.json");
 
-// Initialize Google Auth Library
-const auth = new GoogleAuth({
-  credentials: serviceAccount,
-  scopes: 'https://www.googleapis.com/auth/firebase.messaging'
-});
+admin.initializeApp({
+  credential:admin.credential.cert(serviceAccount)
+})
 
 const getAccessToken = async () => {
   const client = await auth.getClient();
@@ -22,28 +17,21 @@ const pushNotification = async (fcmToken, title, body) => {
   }
 
   try {
-    const accessToken = await getAccessToken();
-
-    const response = await axios.post(
-      'https://fcm.googleapis.com/v1/projects/gymhero-b7346/messages:send',
-      {
-        message: {
-          token: fcmToken,
-          notification: {
-            title: title,
-            body: body
-          }
-        }
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
+    const messageSend = {
+      token:fcmToken,
+      notification:{
+        title:"hello World",
+        body:"sdifhsid"
       }
-    );
-
-    return response.data;
+    }
+    admin.messaging().send(messageSend).then(response =>{
+      console.log("successfully sent notification", response)
+    }).catch(
+      error=>{
+        console.error("Message not sent successfully", error)
+      }
+    )
+    // return response.data;
   } catch (error) {
     console.error('Error sending notification:', error);
     throw new Error('Failed to send notification');
@@ -51,6 +39,3 @@ const pushNotification = async (fcmToken, title, body) => {
 };
 
 module.exports = pushNotification;
-
-
-

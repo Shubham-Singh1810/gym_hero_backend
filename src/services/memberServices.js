@@ -5,8 +5,8 @@ const { body } = require("express-validator");
 
 
 
-exports.getMember = async () => {
-  const members = await Member.find();
+exports.getMember = async (query) => {
+  const members = await Member.find(query);
   return members;
 };
 

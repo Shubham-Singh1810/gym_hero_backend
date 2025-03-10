@@ -171,7 +171,7 @@ memberController.post("/createMember", upload.single("photo"), async (req, res) 
 
 memberController.post("/getMembers", async (req, res) => {
   try {
-    const data = await memberServices.getMember({});
+    const data = await memberServices.getMember(req.body);
     sendResponse(res, 200, "Success", {
       success: true,
       message: "All member list retrieved successfully!",
